@@ -1,0 +1,193 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "giantletters:capital_a"
+    },
+    {
+      "item": "giantletters:capital_b"
+    },
+    {
+      "item": "giantletters:capital_c"
+    },
+    {
+      "item": "giantletters:capital_d"
+    },
+    {
+      "item": "giantletters:capital_e"
+    },
+    {
+      "item": "giantletters:capital_g"
+    },
+    {
+      "item": "giantletters:capital_h"
+    },
+    {
+      "item": "giantletters:capital_i"
+    },
+    {
+      "item": "giantletters:capital_j"
+    },
+    {
+      "item": "giantletters:capital_k"
+    },
+    {
+      "item": "giantletters:capital_l"
+    },
+    {
+      "item": "giantletters:capital_m"
+    },
+    {
+      "item": "giantletters:capital_n"
+    },
+    {
+      "item": "giantletters:capital_o"
+    },
+    {
+      "item": "giantletters:capital_p"
+    },
+    {
+      "item": "giantletters:capital_q"
+    },
+    {
+      "item": "giantletters:capital_r"
+    },
+    {
+      "item": "giantletters:capital_s"
+    },
+    {
+      "item": "giantletters:capital_t"
+    },
+    {
+      "item": "giantletters:capital_u"
+    },
+    {
+      "item": "giantletters:capital_v"
+    },
+    {
+      "item": "giantletters:capital_w"
+    },
+    {
+      "item": "giantletters:capital_x"
+    },
+    {
+      "item": "giantletters:capital_y"
+    },
+    {
+      "item": "giantletters:capital_z"
+    },
+    {
+      "item": "giantletters:small_a"
+    },
+    {
+      "item": "giantletters:small_b"
+    },
+    {
+      "item": "giantletters:small_c"
+    },
+    {
+      "item": "giantletters:small_d"
+    },
+    {
+      "item": "giantletters:small_e"
+    },
+    {
+      "item": "giantletters:small_f"
+    },
+    {
+      "item": "giantletters:small_g"
+    },
+    {
+      "item": "giantletters:small_h"
+    },
+    {
+      "item": "giantletters:small_i"
+    },
+    {
+      "item": "giantletters:small_j"
+    },
+    {
+      "item": "giantletters:small_k"
+    },
+    {
+      "item": "giantletters:small_l"
+    },
+    {
+      "item": "giantletters:small_m"
+    },
+    {
+      "item": "giantletters:small_n"
+    },
+    {
+      "item": "giantletters:small_o"
+    },
+    {
+      "item": "giantletters:small_p"
+    },
+    {
+      "item": "giantletters:small_q"
+    },
+    {
+      "item": "giantletters:small_r"
+    },
+    {
+      "item": "giantletters:small_s"
+    },
+    {
+      "item": "giantletters:small_t"
+    },
+    {
+      "item": "giantletters:small_u"
+    },
+    {
+      "item": "giantletters:small_v"
+    },
+    {
+      "item": "giantletters:small_w"
+    },
+    {
+      "item": "giantletters:small_x"
+    },
+    {
+      "item": "giantletters:small_y"
+    },
+    {
+      "item": "giantletters:small_z"
+    },
+    {
+      "item": "giantletters:digit_0"
+    },
+    {
+      "item": "giantletters:digit_1"
+    },
+    {
+      "item": "giantletters:digit_2"
+    },
+    {
+      "item": "giantletters:digit_3"
+    },
+    {
+      "item": "giantletters:digit_4"
+    },
+    {
+      "item": "giantletters:digit_5"
+    },
+    {
+      "item": "giantletters:digit_6"
+    },
+    {
+      "item": "giantletters:digit_7"
+    },
+    {
+      "item": "giantletters:digit_8"
+    },
+    {
+      "item": "giantletters:digit_9"
+    }
+  ],
+  "result": "giantletters:capital_f",
+  "count": 1
+}
