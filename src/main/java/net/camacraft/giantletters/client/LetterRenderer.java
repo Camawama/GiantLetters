@@ -30,7 +30,7 @@ public final class LetterRenderer implements BlockEntityRenderer<LetterBlockEnti
         BlockState state = be.getBlockState();
         if (!(state.getBlock() instanceof LetterBlock block)) return;
         FontGlyphs.Metrics metrics = FontGlyphs.get();
-        FontGlyphs.Glyph glyph = metrics.glyph(block.glyph().ch());
+        FontGlyphs.Glyph glyph = metrics.glyph(be.character());
         if (glyph == null) return;
         SquareCut.Tile tile = be.tile();
         boolean glowing = state.getValue(LetterBlock.GLOWING);

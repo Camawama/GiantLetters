@@ -186,6 +186,102 @@
     },
     {
       "item": "giantletters:digit_9"
+    },
+    {
+      "item": "giantletters:symbol_exclamation"
+    },
+    {
+      "item": "giantletters:symbol_quote"
+    },
+    {
+      "item": "giantletters:symbol_hash"
+    },
+    {
+      "item": "giantletters:symbol_dollar"
+    },
+    {
+      "item": "giantletters:symbol_percent"
+    },
+    {
+      "item": "giantletters:symbol_ampersand"
+    },
+    {
+      "item": "giantletters:symbol_apostrophe"
+    },
+    {
+      "item": "giantletters:symbol_paren_left"
+    },
+    {
+      "item": "giantletters:symbol_paren_right"
+    },
+    {
+      "item": "giantletters:symbol_asterisk"
+    },
+    {
+      "item": "giantletters:symbol_plus"
+    },
+    {
+      "item": "giantletters:symbol_comma"
+    },
+    {
+      "item": "giantletters:symbol_hyphen"
+    },
+    {
+      "item": "giantletters:symbol_period"
+    },
+    {
+      "item": "giantletters:symbol_slash"
+    },
+    {
+      "item": "giantletters:symbol_colon"
+    },
+    {
+      "item": "giantletters:symbol_semicolon"
+    },
+    {
+      "item": "giantletters:symbol_less"
+    },
+    {
+      "item": "giantletters:symbol_equals"
+    },
+    {
+      "item": "giantletters:symbol_greater"
+    },
+    {
+      "item": "giantletters:symbol_question"
+    },
+    {
+      "item": "giantletters:symbol_at"
+    },
+    {
+      "item": "giantletters:symbol_bracket_left"
+    },
+    {
+      "item": "giantletters:symbol_backslash"
+    },
+    {
+      "item": "giantletters:symbol_bracket_right"
+    },
+    {
+      "item": "giantletters:symbol_caret"
+    },
+    {
+      "item": "giantletters:symbol_underscore"
+    },
+    {
+      "item": "giantletters:symbol_grave"
+    },
+    {
+      "item": "giantletters:symbol_brace_left"
+    },
+    {
+      "item": "giantletters:symbol_bar"
+    },
+    {
+      "item": "giantletters:symbol_brace_right"
+    },
+    {
+      "item": "giantletters:symbol_tilde"
     }
   ],
   "result": "giantletters:capital_h",

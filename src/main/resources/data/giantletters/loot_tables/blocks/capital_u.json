@@ -7,7 +7,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "giantletters:capital_u"
+          "name": "giantletters:capital_u",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            }
+          ]
         }
       ],
       "conditions": [

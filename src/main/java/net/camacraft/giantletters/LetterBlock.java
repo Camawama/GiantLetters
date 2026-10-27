@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -116,6 +117,22 @@ public class LetterBlock extends FaceAttachedHorizontalDirectionalBlock implemen
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new LetterBlockEntity(pos, state);
+    }
+
+    /** A letter renamed in an anvil to one character places that character. */
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        int custom = LetterItem.customCharacter(stack);
+        if (custom != 0 && level.getBlockEntity(pos) instanceof LetterBlockEntity be) be.setCharacter(custom);
+    }
+
+    /** Pick block gives the letter back with its custom character as its name. */
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof LetterBlockEntity be && be.hasCustomCharacter()) stack.setHoverName(be.getCustomName());
+        return stack;
     }
 
     /**

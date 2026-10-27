@@ -19,14 +19,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The 62 glyphs and their blocks, items and the one block entity type. Registry names are {@code capital_a},
- * {@code small_a} and {@code digit_0}, which also sorts the stonecutter's list A to Z, 0 to 9, a to z.
- * {@code tools/generate_assets.py} writes the JSON for this list.
+ * The 94 glyphs (every printable ASCII character but the space) and their blocks, items and the one block entity
+ * type. Registry names are {@code capital_a}, {@code small_a}, {@code digit_0} and {@code symbol_exclamation},
+ * which also sorts the stonecutter's list A to Z, 0 to 9, a to z, then the symbols. Any other character the font
+ * draws comes from a letter renamed to that one character in an anvil ({@link LetterItem#customCharacter}).
+ * {@code tools/generate_assets.py} writes the JSON for this list; keep its table in step.
  */
 public final class Letters {
-    /** One glyph: its registry name, the character the font draws, and its kind ({@code capital}, {@code small}, {@code digit}). */
+    /** One glyph: its registry name, the character the font draws, and its kind ({@code capital}, {@code small}, {@code digit}, {@code symbol}). */
     public record Glyph(String id, char ch, String kind) {
     }
+
+    /** The printable ASCII symbols, in code order, with their registry names. */
+    private static final String SYMBOL_CHARS = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    private static final String[] SYMBOL_IDS = {
+            "exclamation", "quote", "hash", "dollar", "percent", "ampersand", "apostrophe", "paren_left", "paren_right",
+            "asterisk", "plus", "comma", "hyphen", "period", "slash", "colon", "semicolon", "less", "equals", "greater",
+            "question", "at", "bracket_left", "backslash", "bracket_right", "caret", "underscore", "grave", "brace_left",
+            "bar", "brace_right", "tilde"};
 
     public static final List<Glyph> ALL;
 
@@ -35,6 +45,7 @@ public final class Letters {
         for (char c = 'a'; c <= 'z'; c++) all.add(new Glyph("capital_" + c, Character.toUpperCase(c), "capital"));
         for (char c = 'a'; c <= 'z'; c++) all.add(new Glyph("small_" + c, c, "small"));
         for (char c = '0'; c <= '9'; c++) all.add(new Glyph("digit_" + c, c, "digit"));
+        for (int i = 0; i < SYMBOL_CHARS.length(); i++) all.add(new Glyph("symbol_" + SYMBOL_IDS[i], SYMBOL_CHARS.charAt(i), "symbol"));
         ALL = Collections.unmodifiableList(all);
     }
 
@@ -53,7 +64,7 @@ public final class Letters {
         }
     }
 
-    /** One block entity type for every letter: it holds the colour, and on the client the letter's place in its square. */
+    /** One block entity type for every letter: it holds the colour and a custom character, and on the client the letter's place in its square. */
     public static final RegistryObject<BlockEntityType<LetterBlockEntity>> BLOCK_ENTITY = BLOCK_ENTITIES.register("letter",
             () -> BlockEntityType.Builder.of(LetterBlockEntity::new,
                     BLOCKS_BY_GLYPH.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));

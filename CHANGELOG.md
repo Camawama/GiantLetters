@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.1 (2026-10-26)
+
+- The 32 printable ASCII symbols as letters too (`! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ \` { | } ~`),
+  cut on the stonecutter like the rest: 94 letters.
+- Any other character the font draws: rename a letter in an anvil to exactly that one character (`é`, `ñ`, `ß`,
+  `♥`, `→`, `日`...) and it shows it, in the hand and on the wall. Such letters join only letters of the same
+  character, keep the character as their name when broken, and a character wider or taller than the line box is
+  shrunk to fit its square.
+- A glowing letter's light has its dye's colour under Colorful Lighting (its block light colour API, by reflection;
+  white letters keep plain light).
+
 ## 0.1.0 (2026-10-26)
 
 - 62 letter blocks: the capitals A to Z, the small letters a to z and the digits 0 to 9, for walls, floors and

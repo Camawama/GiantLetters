@@ -7,7 +7,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "giantletters:small_r"
+          "name": "giantletters:small_r",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            }
+          ]
         }
       ],
       "conditions": [

@@ -1,14 +1,20 @@
 # Giant Letters
 
-Letters and digits for your builds, on Forge 1.20.1. Sixty-two blocks: the capitals A to Z, the small letters a to
-z and the digits 0 to 9. Put one on a wall, a floor or a ceiling and it reads the way you placed it; put the same
-letter in a square and the square becomes one bigger letter. They are drawn with the game's own font, so they look
-like sign text and follow a font resource pack the way sign text does.
+Letters, digits and symbols for your builds, on Forge 1.20.1. Ninety-four blocks: the capitals A to Z, the small
+letters a to z, the digits 0 to 9 and the 32 symbols of a keyboard (`! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ]
+^ _ \` { | } ~`), and any other character the font draws through an anvil. Put one on a wall, a floor or a ceiling
+and it reads the way you placed it; put the same letter in a square and the square becomes one bigger letter. They
+are drawn with the game's own font, so they look like sign text and follow a font resource pack the way sign text
+does.
 
 ## In the game
 
 - **Getting letters.** Put paper in a stonecutter: every letter is there. Any letter goes back in and becomes any
   other letter, so nothing is wasted.
+- **Any other character.** Rename a letter in an anvil to exactly one character (`é`, `ñ`, `ß`, `♥`, `→`, `日`,
+  anything a sign can show) and it becomes that character: the icon shows it and so does the placed block. Such a
+  letter joins only letters of the same character, and keeps the character as its name when broken or picked. A
+  character wider or taller than the font's line (some East Asian or symbol glyphs) is shrunk to fit its square.
 - **Placing.** A letter is a one-pixel plate against the block face you click: a wall (it stands upright facing
   you), a floor (its top points away from you, you read it looking down) or a ceiling (its top points toward you).
   Nothing collides with it, it can be waterlogged, and it pops off as an item when the block behind it goes.
@@ -18,7 +24,8 @@ like sign text and follow a font resource pack the way sign text does.
 - **Colour and glow.** A letter is white until dyed. Right-click with a dye and the whole letter takes the colour,
   one dye however big it is. Glow ink makes it glow (full bright, with the dark outline sign text gets) and give
   light; an ink sac makes it black and takes the glow away. Nothing is used up when the letter already is as asked.
-  Colour and glow are lost when a letter is broken, as a sign's are.
+  Colour and glow are lost when a letter is broken, as a sign's are. With Colorful Lighting, a glowing letter's
+  light has its dye's colour (a white letter's stays plain).
 - **Where they are.** Functional Blocks, after the signs.
 
 ## Config
@@ -45,6 +52,9 @@ letter block appears or disappears, the connected region of that letter is walke
 (`SquareCut`, unit-tested). The server runs the same cut when a dye is applied, to colour the whole letter.
 
 No mod dependency. Four fields and one method of the client's font classes are opened with an access transformer.
+Colorful Lighting is optional: its block light colour provider is registered by reflection
+(`client/LetterLightColors`), answering from a map the client's letter block entities keep up to date, so nothing
+is compiled against it. A renamed letter's character is measured from the font the first time it is drawn.
 
 ## Building
 

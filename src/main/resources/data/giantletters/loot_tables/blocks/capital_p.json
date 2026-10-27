@@ -7,7 +7,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "giantletters:capital_p"
+          "name": "giantletters:capital_p",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            }
+          ]
         }
       ],
       "conditions": [

@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * How letter blocks join into bigger letters. Blocks of the same letter on the same surface (same {@code FACE} and
- * {@code FACING}), touching side to side along that surface and not placed {@code single}, form a region; the
- * region is cut into squares ({@link SquareCut}) and each square shows one glyph. Both sides use it: the client
- * to draw, the server to dye a whole letter at once. A region over {@value #CELL_BUDGET} blocks never merges.
+ * How letter blocks join into bigger letters. Blocks showing the same character on the same surface (same
+ * {@code FACE} and {@code FACING}), touching side to side along that surface and not placed {@code single}, form
+ * a region; the region is cut into squares ({@link SquareCut}) and each square shows one glyph. The character is
+ * the block entity's ({@link LetterBlockEntity#character()}: a renamed letter joins other letters renamed the
+ * same way, not its block's own letter). Both sides use it: the client to draw, the server to dye a whole letter at
+ * once. A region over {@value #CELL_BUDGET} blocks never merges.
  */
 public final class LetterGroups {
     /** A connected region bigger than this is left as single letters (and the walk stops there). */
@@ -26,12 +28,19 @@ public final class LetterGroups {
     private LetterGroups() {
     }
 
-    /** Whether {@code other} joins a region of blocks like {@code origin}: same letter, same surface, not single. */
-    public static boolean joins(BlockState origin, BlockState other) {
-        return other.getBlock() == origin.getBlock()
+    /** The character shown at {@code pos} (whose state is {@code state}): the block entity's, or the block's own. */
+    public static int characterAt(BlockGetter level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof LetterBlockEntity be) return be.character();
+        return state.getBlock() instanceof LetterBlock block ? block.glyph().ch() : 0;
+    }
+
+    /** Whether the block at {@code pos} joins a region of blocks like {@code origin} showing {@code character}: a letter of the same character, same surface, not single. */
+    public static boolean joins(BlockGetter level, BlockState origin, int character, BlockPos pos, BlockState other) {
+        return other.getBlock() instanceof LetterBlock
                 && !other.getValue(LetterBlock.SINGLE)
                 && other.getValue(FaceAttachedHorizontalDirectionalBlock.FACE) == origin.getValue(FaceAttachedHorizontalDirectionalBlock.FACE)
-                && other.getValue(HorizontalDirectionalBlock.FACING) == origin.getValue(HorizontalDirectionalBlock.FACING);
+                && other.getValue(HorizontalDirectionalBlock.FACING) == origin.getValue(HorizontalDirectionalBlock.FACING)
+                && characterAt(level, pos, other) == character;
     }
 
     /** The tile of every block in the region of the letter block at {@code pos} (just {@code pos} for a single or a non-letter). */
@@ -89,8 +98,8 @@ public final class LetterGroups {
     }
 
     /**
-     * Client: a letter block appeared or disappeared at {@code pos} (with {@code state}): the regions it touches
-     * along its surface, and its own, are stale.
+     * Client: a letter block appeared, disappeared or changed its character at {@code pos} (with {@code state}):
+     * the regions it touches along its surface, and its own, are stale.
      */
     public static void invalidateAround(BlockGetter level, BlockPos pos, BlockState state) {
         if (!(state.getBlock() instanceof LetterBlock)) return;
@@ -134,9 +143,10 @@ public final class LetterGroups {
         return (int) key;
     }
 
-    /** Flood fill along the surface from {@code origin} over blocks that {@link #joins} its state. */
+    /** Flood fill along the surface from {@code origin} over blocks that {@link #joins} its state and character. */
     private static Region walk(BlockGetter level, BlockPos origin, BlockState state, LetterFrame frame) {
         Region region = new Region();
+        int character = characterAt(level, origin, state);
         ArrayDeque<long[]> queue = new ArrayDeque<>();
         region.cells.put(key(0, 0), origin);
         queue.add(new long[]{0, 0});
@@ -149,7 +159,7 @@ public final class LetterGroups {
                 long k = key(ni, nj);
                 if (region.cells.containsKey(k)) continue;
                 BlockPos p = origin.relative(frame.right(), ni).relative(frame.up(), nj);
-                if (!joins(state, level.getBlockState(p))) continue;
+                if (!joins(level, state, character, p, level.getBlockState(p))) continue;
                 if (region.cells.size() >= CELL_BUDGET) {
                     region.overBudget = true;
                     return region;

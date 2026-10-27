@@ -28,7 +28,7 @@ public final class LetterItemRenderer extends BlockEntityWithoutLevelRenderer {
     public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         if (!(stack.getItem() instanceof LetterItem item)) return;
         FontGlyphs.Metrics metrics = FontGlyphs.get();
-        FontGlyphs.Glyph glyph = metrics.glyph(item.letter().glyph().ch());
+        FontGlyphs.Glyph glyph = metrics.glyph(LetterItem.characterOf(stack));
         if (glyph == null) return;
         int white = DyeColor.WHITE.getTextColor();
         GlyphQuads.drawTile(pose, buffers, metrics, glyph, SquareCut.Tile.SINGLE, FRONT, 0.5F, white, true, light);

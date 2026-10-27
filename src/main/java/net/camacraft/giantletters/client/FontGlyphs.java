@@ -94,7 +94,28 @@ public final class FontGlyphs {
 
         /** The glyph for a character, or null when the font draws nothing for it. */
         public Glyph glyph(char c) {
-            return glyphs.get((int) c);
+            return glyph((int) c);
+        }
+
+        /**
+         * The glyph for a code point, measured now if it isn't one of the 94 measured with the font (a renamed
+         * letter's character), or null when the font draws nothing for it. Render thread only.
+         */
+        public Glyph glyph(int codePoint) {
+            Glyph g = glyphs.get(codePoint);
+            if (g != null || glyphs.containsKey(codePoint)) return g;
+            RenderSystem.assertOnRenderThread();
+            BakedGlyph baked = set.getGlyph(codePoint);
+            if (baked instanceof EmptyGlyph) {
+                glyphs.put(codePoint, null);
+                return null;
+            }
+            g = new Glyph(baked);
+            for (FontTexture texture : new ArrayList<>(set.textures)) {
+                measure(texture, List.of(g));
+            }
+            glyphs.put(codePoint, g);
+            return g;
         }
     }
 

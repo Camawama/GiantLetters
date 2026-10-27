@@ -1,13 +1,26 @@
 """Writes the per-letter JSON of Giant Letters: blockstates, item models, loot tables, stonecutting recipes, tags
-and the language file. Run it from anywhere after changing the set of letters in Letters.java; the files it writes
-are committed. Every letter has the same empty block model (the glyph is drawn by the block entity renderer), an
-item model drawn by the mod's item renderer, drops itself, and is cut on the stonecutter from paper or from any
-other letter."""
+and the language file. Run it from anywhere after changing the set of glyphs in Letters.java (keep the two tables
+in step); the files it writes are committed. Every letter has the same empty block model (the glyph is drawn by the
+block entity renderer), an item model drawn by the mod's item renderer, drops itself (keeping a custom character's
+name), and is cut on the stonecutter from paper or from any other letter."""
 import json
 import os
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
 MOD = "giantletters"
+
+SYMBOLS = [
+    ("!", "exclamation", "Exclamation Mark"), ('"', "quote", "Quotation Mark"), ("#", "hash", "Number Sign"),
+    ("$", "dollar", "Dollar Sign"), ("%", "percent", "Percent Sign"), ("&", "ampersand", "Ampersand"),
+    ("'", "apostrophe", "Apostrophe"), ("(", "paren_left", "Left Parenthesis"), (")", "paren_right", "Right Parenthesis"),
+    ("*", "asterisk", "Asterisk"), ("+", "plus", "Plus Sign"), (",", "comma", "Comma"), ("-", "hyphen", "Hyphen"),
+    (".", "period", "Period"), ("/", "slash", "Slash"), (":", "colon", "Colon"), (";", "semicolon", "Semicolon"),
+    ("<", "less", "Less-Than Sign"), ("=", "equals", "Equals Sign"), (">", "greater", "Greater-Than Sign"),
+    ("?", "question", "Question Mark"), ("@", "at", "At Sign"), ("[", "bracket_left", "Left Square Bracket"),
+    ("\\", "backslash", "Backslash"), ("]", "bracket_right", "Right Square Bracket"), ("^", "caret", "Caret"),
+    ("_", "underscore", "Underscore"), ("`", "grave", "Grave Accent"), ("{", "brace_left", "Left Curly Bracket"),
+    ("|", "bar", "Vertical Bar"), ("}", "brace_right", "Right Curly Bracket"), ("~", "tilde", "Tilde"),
+]
 
 LETTERS = []
 for c in "abcdefghijklmnopqrstuvwxyz":
@@ -16,6 +29,8 @@ for c in "abcdefghijklmnopqrstuvwxyz":
     LETTERS.append(("small_" + c, c, "Small Letter " + c))
 for d in "0123456789":
     LETTERS.append(("digit_" + d, d, "Digit " + d))
+for ch, name, title in SYMBOLS:
+    LETTERS.append(("symbol_" + name, ch, title))
 
 # item/generated's display settings: a flat item held and shown like paper or a sign
 DISPLAY = {
@@ -50,7 +65,11 @@ def main():
             "pools": [{
                 "rolls": 1,
                 "bonus_rolls": 0,
-                "entries": [{"type": "minecraft:item", "name": "%s:%s" % (MOD, name)}],
+                "entries": [{
+                    "type": "minecraft:item",
+                    "name": "%s:%s" % (MOD, name),
+                    "functions": [{"function": "minecraft:copy_name", "source": "block_entity"}],
+                }],
                 "conditions": [{"condition": "minecraft:survives_explosion"}],
             }],
         })
