@@ -18,9 +18,11 @@ import java.util.Map;
  * (out of the wall, up from a floor, down from a ceiling). {@code right x up = normal}, so a quad drawn
  * bottom-left, bottom-right, top-right, top-left faces the reader.
  * <p>
- * On a wall the letter stands upright facing out ({@code FACING}). On a floor or ceiling {@code FACING} points at
- * the player who placed it, as on a button: a floor letter's top points away from them (they read it looking
- * down), a ceiling letter's top points toward them (they read it with their head back).
+ * On a wall the letter stands upright facing out ({@code FACING}). On a floor or ceiling {@code FACING} is the way
+ * the player who placed it was looking (vanilla's button placement stores that, not the way toward the player: the
+ * first build read it the other way and every floor letter came out turned 180 degrees, the owner, 2026-10-27): a
+ * floor letter's top points the way they looked, away from them (they read it looking down); a ceiling letter's
+ * top points back toward them (they read it with their head back, where the top of their view is behind them).
  */
 public record LetterFrame(Direction right, Direction up, Direction normal) {
     private static final Map<Direction, VoxelShape> PLATES = new EnumMap<>(Direction.class);
@@ -39,8 +41,9 @@ public record LetterFrame(Direction right, Direction up, Direction normal) {
         AttachFace face = state.getValue(FaceAttachedHorizontalDirectionalBlock.FACE);
         return switch (face) {
             case WALL -> new LetterFrame(facing.getCounterClockWise(), Direction.UP, facing);
-            case FLOOR -> new LetterFrame(facing.getOpposite().getClockWise(), facing.getOpposite(), Direction.UP);
-            case CEILING -> new LetterFrame(facing.getOpposite().getClockWise(), facing, Direction.DOWN);
+            // a player looking FACING: their right is its clockwise turn (right x up = the normal, toward them)
+            case FLOOR -> new LetterFrame(facing.getClockWise(), facing, Direction.UP);
+            case CEILING -> new LetterFrame(facing.getClockWise(), facing.getOpposite(), Direction.DOWN);
         };
     }
 

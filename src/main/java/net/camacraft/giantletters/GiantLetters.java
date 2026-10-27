@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -29,11 +28,14 @@ public final class GiantLetters {
 
     private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    /** The Giant Letters tab, after Functional Blocks: A to Z, a to z, 0 to 9, the symbols; a Capital Letter A as its icon. */
+    /**
+     * The Giant Letters tab, among the other mods' tabs after vanilla's (no ordering of its own: ordered after
+     * Functional Blocks it sat on the creative menu's first page, the owner, 2026-10-27): A to Z, a to z, 0 to 9, the
+     * symbols; a Capital Letter A as its icon.
+     */
     public static final RegistryObject<CreativeModeTab> TAB = TABS.register("letters", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + MODID))
             .icon(() -> new ItemStack(Letters.ITEMS_BY_GLYPH.get(Letters.ALL.get(0)).get()))
-            .withTabsBefore(CreativeModeTabs.FUNCTIONAL_BLOCKS)
             .displayItems((parameters, output) -> {
                 for (Letters.Glyph glyph : Letters.ALL) output.accept(Letters.ITEMS_BY_GLYPH.get(glyph).get());
             })

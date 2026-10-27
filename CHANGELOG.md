@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.4 (2026-10-27)
+
+- Floor and ceiling letters read the way the placer was looking: the block stores that direction (as a button does),
+  and 0.1.3 read it as the direction toward the placer, so every floor and ceiling letter came out turned 180 degrees.
+  Letters already placed keep their block state and now read the right way.
+- The Giant Letters creative tab sits among the other mods' tabs after vanilla's, not on the first page.
+
 ## 0.1.3 (2026-10-26)
 
 - Letters can be shifted along their face to fix spacing: right-click a letter with an empty hand and it moves one
