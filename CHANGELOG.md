@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.3 (2026-10-26)
+
+- Letters can be shifted along their face to fix spacing: right-click a letter with an empty hand and it moves one
+  pixel toward the side of the face you clicked (left, right, up, down, or a corner for both; the middle does
+  nothing); sneak and right-click to put it back in the centre. A big letter moves as a whole by its own pixels, up to
+  half of its blocks each way, so a letter can be slid into its neighbour's space (kerning).
+
+## 0.1.2 (2026-10-26)
+
+- A creative tab of its own, Giant Letters, after Functional Blocks: A to Z, a to z, 0 to 9, the symbols. The
+  letters no longer sit in Functional Blocks (the search tab still finds them).
+
 ## 0.1.1 (2026-10-26)
 
 - The 32 printable ASCII symbols as letters too (`! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ \` { | } ~`),

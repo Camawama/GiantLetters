@@ -24,6 +24,8 @@ public class LetterBlockEntity extends BlockEntity implements Nameable {
     private DyeColor color = DyeColor.WHITE;
     /** A custom character (a code point), or 0 for the block's own. */
     private int character;
+    /** How far the glyph is shifted along the face, in sixteenths of a block, right and up (a click on the letter's side). */
+    private int offsetX, offsetY;
 
     // client: the cached square and the cell's place in it
     private SquareCut.Tile tile = SquareCut.Tile.SINGLE;
@@ -61,6 +63,27 @@ public class LetterBlockEntity extends BlockEntity implements Nameable {
     public void setCharacter(int codePoint) {
         if (this.character == codePoint) return;
         this.character = codePoint;
+        setChanged();
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    /** The glyph's shift right along the face, in sixteenths of a block. */
+    public int offsetX() {
+        return offsetX;
+    }
+
+    /** The glyph's shift up along the face, in sixteenths of a block. */
+    public int offsetY() {
+        return offsetY;
+    }
+
+    /** Sets the shift and tells the clients. */
+    public void setOffset(int x, int y) {
+        if (offsetX == x && offsetY == y) return;
+        offsetX = x;
+        offsetY = y;
         setChanged();
         if (level != null && !level.isClientSide) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
@@ -136,12 +159,16 @@ public class LetterBlockEntity extends BlockEntity implements Nameable {
         super.saveAdditional(tag);
         tag.putString("Color", color.getName());
         if (character != 0) tag.putInt("Char", character);
+        if (offsetX != 0) tag.putInt("OffsetX", offsetX);
+        if (offsetY != 0) tag.putInt("OffsetY", offsetY);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         color = DyeColor.byName(tag.getString("Color"), DyeColor.WHITE);
+        offsetX = tag.getInt("OffsetX");
+        offsetY = tag.getInt("OffsetY");
         int before = character;
         character = tag.contains("Char") ? tag.getInt("Char") : 0;
         if (level != null && level.isClientSide) {

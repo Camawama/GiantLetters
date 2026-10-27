@@ -34,7 +34,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -143,12 +145,13 @@ public class LetterBlock extends FaceAttachedHorizontalDirectionalBlock implemen
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
+        if (!player.getAbilities().mayBuild) return InteractionResult.PASS;
+        if (stack.isEmpty()) return hand == InteractionHand.MAIN_HAND ? shift(state, level, pos, player, hit) : InteractionResult.PASS;
         Item item = stack.getItem();
         DyeColor dye = item instanceof DyeItem d ? d.getDyeColor() : item instanceof InkSacItem ? DyeColor.BLACK : null;
         boolean glow = item instanceof GlowInkSacItem;
         boolean ink = item instanceof InkSacItem;
         if (dye == null && !glow) return InteractionResult.PASS;
-        if (!player.getAbilities().mayBuild) return InteractionResult.PASS;
 
         List<BlockPos> letter = LetterGroups.square(level, pos);
         boolean changes = false;
@@ -173,6 +176,44 @@ public class LetterBlock extends FaceAttachedHorizontalDirectionalBlock implemen
         level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
         if (!player.isCreative()) stack.shrink(1);
         player.awardStat(Stats.ITEM_USED.get(item));
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
+        return InteractionResult.CONSUME;
+    }
+
+    /** The most a letter shifts each way, in sixteenths of a block per block of its size. */
+    private static final int MAX_SHIFT = 8;
+
+    /**
+     * An empty hand shifts the letter toward the side of its face that was clicked (a chiseled bookshelf picks its slot
+     * the same way): the face is a 3x3 of zones, the outer ones move the whole letter one pixel that way (a corner both
+     * ways; the middle does nothing), and a sneaking click puts it back in the centre. A big letter moves by its own
+     * pixels and up to half of its blocks each way, so a letter can be slid into its neighbour's space to close a gap.
+     */
+    private InteractionResult shift(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        LetterFrame frame = LetterFrame.of(state);
+        Vec3 local = hit.getLocation().subtract(Vec3.atLowerCornerOf(pos));
+        double u = frame.across(local), v = frame.upward(local);
+        int dx = u < 1.0 / 3 ? -1 : u > 2.0 / 3 ? 1 : 0;
+        int dy = v < 1.0 / 3 ? -1 : v > 2.0 / 3 ? 1 : 0;
+        boolean centre = player.isShiftKeyDown();
+        if (!centre && dx == 0 && dy == 0) return InteractionResult.PASS;
+        List<BlockPos> letter = LetterGroups.square(level, pos);
+        int size = Math.max(1, (int) Math.round(Math.sqrt(letter.size())));
+        int step = size, max = MAX_SHIFT * size;
+        boolean changes = false;
+        for (BlockPos p : letter) {
+            if (!(level.getBlockEntity(p) instanceof LetterBlockEntity be)) continue;
+            int x = centre ? 0 : Mth.clamp(be.offsetX() + dx * step, -max, max);
+            int y = centre ? 0 : Mth.clamp(be.offsetY() + dy * step, -max, max);
+            if (x != be.offsetX() || y != be.offsetY()) changes = true;
+        }
+        if (!changes) return InteractionResult.PASS;
+        if (level.isClientSide) return InteractionResult.SUCCESS;
+        for (BlockPos p : letter) {
+            if (!(level.getBlockEntity(p) instanceof LetterBlockEntity be)) continue;
+            be.setOffset(centre ? 0 : Mth.clamp(be.offsetX() + dx * step, -max, max), centre ? 0 : Mth.clamp(be.offsetY() + dy * step, -max, max));
+        }
+        level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
         level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
         return InteractionResult.CONSUME;
     }

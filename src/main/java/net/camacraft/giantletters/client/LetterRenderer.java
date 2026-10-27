@@ -36,7 +36,7 @@ public final class LetterRenderer implements BlockEntityRenderer<LetterBlockEnti
         boolean glowing = state.getValue(LetterBlock.GLOWING);
         boolean outline = glowing && outlineVisible(be, tile.size());
         GlyphQuads.drawTile(pose, buffers, metrics, glyph, tile, LetterFrame.of(state), DEPTH, be.color().getTextColor(),
-                outline, glowing ? LightTexture.FULL_BRIGHT : light);
+                outline, glowing ? LightTexture.FULL_BRIGHT : light, be.offsetX(), be.offsetY());
     }
 
     /** The sign rule, scaled by the letter's size: the outline shows within 16 blocks of a one-block letter. */

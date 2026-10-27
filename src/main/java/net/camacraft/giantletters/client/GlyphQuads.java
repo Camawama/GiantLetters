@@ -30,7 +30,18 @@ public final class GlyphQuads {
      */
     public static void drawTile(PoseStack pose, MultiBufferSource buffers, FontGlyphs.Metrics metrics, FontGlyphs.Glyph glyph,
                                 SquareCut.Tile tile, LetterFrame frame, float depth, int rgb, boolean outline, int light) {
+        drawTile(pose, buffers, metrics, glyph, tile, frame, depth, rgb, outline, light, 0, 0);
+    }
+
+    /**
+     * As {@link #drawTile(PoseStack, MultiBufferSource, FontGlyphs.Metrics, FontGlyphs.Glyph, SquareCut.Tile, LetterFrame, float, int, boolean, int)},
+     * the whole letter shifted {@code shiftX} right and {@code shiftY} up along the face in sixteenths of a block (the
+     * block's part of it moves with it, so a shifted letter reaches into the next block's space).
+     */
+    public static void drawTile(PoseStack pose, MultiBufferSource buffers, FontGlyphs.Metrics metrics, FontGlyphs.Glyph glyph,
+                                SquareCut.Tile tile, LetterFrame frame, float depth, int rgb, boolean outline, int light, int shiftX, int shiftY) {
         int n = tile.size();
+        float sx = shiftX / 16.0F, sy = shiftY / 16.0F;
         float s = n / metrics.boxHeight();   // blocks per text unit
         float inkW = glyph.inkRight - glyph.inkLeft, inkH = glyph.inkBottom - glyph.inkTop;
         float centre = (glyph.inkLeft + glyph.inkRight) * 0.5F;
@@ -46,12 +57,14 @@ public final class GlyphQuads {
             gy1 = (metrics.boxBottom - glyph.up) * s;
             gy0 = (metrics.boxBottom - glyph.down) * s;
         }
-        float gx0 = n * 0.5F + (glyph.left - centre) * s;
-        float gx1 = n * 0.5F + (glyph.right - centre) * s;
+        float gx0 = n * 0.5F + (glyph.left - centre) * s + sx;
+        float gx1 = n * 0.5F + (glyph.right - centre) * s + sx;
+        gy0 += sy;
+        gy1 += sy;
         Matrix4f matrix = pose.last().pose();
-        // the tile's face, in the square's space; the glow outline may reach one glyph pixel past the square's own
-        // edges (a capital's top sits on the line box's top, so its outline has no room inside the square)
-        float cx0 = tile.column(), cx1 = tile.column() + 1, cy0 = tile.row(), cy1 = tile.row() + 1;
+        // the tile's face, in the square's space, shifted with the letter; the glow outline may reach one glyph pixel
+        // past the square's own edges (a capital's top sits on the line box's top, so its outline has no room inside)
+        float cx0 = tile.column() + sx, cx1 = tile.column() + 1 + sx, cy0 = tile.row() + sy, cy1 = tile.row() + 1 + sy;
         if (outline) {
             float ox0 = tile.column() == 0 ? cx0 - s : cx0, ox1 = tile.column() == n - 1 ? cx1 + s : cx1;
             float oy0 = tile.row() == 0 ? cy0 - s : cy0, oy1 = tile.row() == n - 1 ? cy1 + s : cy1;

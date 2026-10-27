@@ -26,7 +26,12 @@ does.
   light; an ink sac makes it black and takes the glow away. Nothing is used up when the letter already is as asked.
   Colour and glow are lost when a letter is broken, as a sign's are. With Colorful Lighting, a glowing letter's
   light has its dye's colour (a white letter's stays plain).
-- **Where they are.** Functional Blocks, after the signs.
+- **Spacing.** Letters sit centred in their block, so a word is set like a monospace font. To close a gap or nudge a
+  letter, right-click it with an empty hand: it moves one pixel toward the side of the face you clicked (the face is
+  a 3x3 of zones like a chiseled bookshelf's slots: left, right, top, bottom, a corner for both). Sneak and right-click
+  to put it back in the centre. A big letter moves as a whole, by its own pixels, up to half of its blocks each way, and
+  may reach into its neighbour's block.
+- **Where they are.** Their own creative tab, Giant Letters, after Functional Blocks.
 
 ## Config
 

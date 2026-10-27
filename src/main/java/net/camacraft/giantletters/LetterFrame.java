@@ -5,6 +5,7 @@ import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Vector3f;
@@ -58,6 +59,25 @@ public record LetterFrame(Direction right, Direction up, Direction normal) {
         set(p, up, y);
         set(p, normal, depth);
         return p;
+    }
+
+    /** How far along the face a point of the block's own space lies in the letter's right direction, 0 to 1. */
+    public double across(Vec3 local) {
+        return along(local, right);
+    }
+
+    /** How far up the face a point of the block's own space lies in the letter's up direction, 0 to 1. */
+    public double upward(Vec3 local) {
+        return along(local, up);
+    }
+
+    private static double along(Vec3 local, Direction axis) {
+        double v = switch (axis.getAxis()) {
+            case X -> local.x;
+            case Y -> local.y;
+            case Z -> local.z;
+        };
+        return axis.getAxisDirection() == Direction.AxisDirection.POSITIVE ? v : 1.0 - v;
     }
 
     private static void set(Vector3f p, Direction axis, float along) {
