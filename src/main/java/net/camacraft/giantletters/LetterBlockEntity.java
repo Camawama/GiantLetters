@@ -1,6 +1,7 @@
 package net.camacraft.giantletters;
 
 import net.camacraft.giantletters.client.LetterLightColors;
+import net.camacraft.giantletters.client.LetterMeshes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -128,12 +129,15 @@ public class LetterBlockEntity extends BlockEntity implements Nameable {
     }
 
     void setTile(SquareCut.Tile tile) {
+        boolean changed = !tile.equals(this.tile);
         this.tile = tile;
         this.tileDirty = false;
+        if (changed && level != null && level.isClientSide) LetterMeshes.changed(this);
     }
 
     void markTileDirty() {
         tileDirty = true;
+        if (level != null && level.isClientSide) LetterMeshes.changed(this);
     }
 
     @Override
@@ -142,6 +146,7 @@ public class LetterBlockEntity extends BlockEntity implements Nameable {
         if (level != null && level.isClientSide) {
             LetterGroups.invalidateAround(level, worldPosition, getBlockState());
             LetterLightColors.publish(this);
+            LetterMeshes.add(this);
         }
     }
 
@@ -151,6 +156,7 @@ public class LetterBlockEntity extends BlockEntity implements Nameable {
         if (level != null && level.isClientSide) {
             LetterGroups.invalidateAround(level, worldPosition, getBlockState());
             LetterLightColors.forget(this);
+            LetterMeshes.remove(this);
         }
     }
 
@@ -175,6 +181,7 @@ public class LetterBlockEntity extends BlockEntity implements Nameable {
             LetterLightColors.publish(this);
             // another character joins another region
             if (before != character) LetterGroups.invalidateAround(level, worldPosition, getBlockState());
+            LetterMeshes.changed(this);
         }
     }
 

@@ -44,13 +44,24 @@ does.
 
 ## How it draws
 
-The letter block has no texture of its own. Its block entity renderer takes the glyph from the live default font
-set, the one the sign renderer uses, and draws quads on the font's glyph texture with the text render types. Once
-per font set (every resource reload makes a new one) the mod reads the glyph texture back and measures each
-glyph's ink and the whole set's line box (the capitals' tops to the descenders' bottoms). Every letter is drawn at
-one scale, the line box filling the square top to bottom, on a common baseline, centred by its own ink width. A
-block of a big letter draws only the part of the glyph on its own face, with its own light, so nothing special is
-needed for culling or chunk borders.
+The letter block has no texture of its own. The glyph comes from the live default font set, the one the sign
+renderer uses, and is drawn as quads on the font's glyph texture with the text render types. Once per font set
+(every resource reload makes a new one) the mod reads the glyph texture back and measures each glyph's ink and the
+whole set's line box (the capitals' tops to the descenders' bottoms). Every letter is drawn at one scale, the line
+box filling the square top to bottom, on a common baseline, centred by its own ink width. A block of a big letter
+draws only the part of the glyph on its own face, with its own light, so nothing special is needed for culling or
+chunk borders.
+
+Since 0.1.5 the letters of the client's world are drawn as static meshes (`client/LetterMeshes`), not block by
+block: each chunk section's letter blocks are built once into one vertex buffer per text render type (the font
+texture, and the glow outline's polygon-offset variant), and drawn after the block entities with one draw call per
+buffer in view. A section is rebuilt only when a letter in it loads, unloads or changes (colour, character, shift,
+its place in a bigger letter), when a block's light changes, when the glow outline comes or goes with the camera's
+distance, or when the font set changes. Before that the block entity renderer rebuilt every block's quads every
+frame and switched render types per block, which ended vanilla's shared buffer and drew it twice a block: a dozen
+3x3 letters took about 5% of the render thread. The block entity renderer still draws letters under another mod's
+transform (on a Valkyrien Skies ship, in a preview level). `-Dgiantletters.batchedLetters=false` goes back to
+drawing every letter block by block.
 
 Which blocks form one letter is computed where it is needed and cached in the block entities on the client: when a
 letter block appears or disappears, the connected region of that letter is walked once and cut into squares

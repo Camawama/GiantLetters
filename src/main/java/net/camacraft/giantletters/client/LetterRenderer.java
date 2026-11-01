@@ -16,7 +16,9 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Draws a letter block: its part of the glyph, one pixel off the wall, in its colour; a glowing one full bright
- * with the sign's dark outline when the camera is within 16 blocks per block of its size.
+ * with the sign's dark outline when the camera is within 16 blocks per block of its size. The letters of the
+ * client's own world are drawn from {@link LetterMeshes} instead (a few static meshes a frame), so this draws only
+ * what those leave out: a letter under another mod's transform (on a Valkyrien Skies ship, in a preview level).
  */
 public final class LetterRenderer implements BlockEntityRenderer<LetterBlockEntity> {
     /** How far off the wall the glyph sits: on the outer face of the one-pixel plate. */
@@ -29,6 +31,7 @@ public final class LetterRenderer implements BlockEntityRenderer<LetterBlockEnti
     public void render(LetterBlockEntity be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         BlockState state = be.getBlockState();
         if (!(state.getBlock() instanceof LetterBlock block)) return;
+        if (LetterMeshes.claims(be)) return;
         FontGlyphs.Metrics metrics = FontGlyphs.get();
         FontGlyphs.Glyph glyph = metrics.glyph(be.character());
         if (glyph == null) return;
